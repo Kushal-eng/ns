@@ -4,8 +4,11 @@ import pdfkit
 import tempfile
 import os
 
+# Ensure set_page_config is the first Streamlit command
+st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
+
 # Configure Gemini API
-API_KEY = os.getenv("AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
+API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
     st.error("❌ API Key missing! Please set GEMINI_API_KEY as an environment variable.")
 else:
@@ -13,13 +16,12 @@ else:
 
 def get_gemini_response(prompt):
     try:
-        model = genai.GenerativeModel("gemini-1.0-pro-latest")  # Ensure correct model name
+        model = genai.GenerativeModel("gemini-1.0-pro")  # Ensure correct model name
         response = model.generate_content(prompt)
         return response.text if response and hasattr(response, 'text') else "⚠️ No response received. Try again."
     except Exception as e:
         return f"⚠️ Error fetching AI response. Please check your API key and model access. ({str(e)})"
 
-st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 st.title("🍽️ AI-Powered Nutrient Deficiency & Health Tracker")
 
 # Sidebar - BMI Calculator
