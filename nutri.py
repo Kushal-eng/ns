@@ -8,7 +8,7 @@ import os
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 
 # Configure Gemini API
-API_KEY = os.getenv("AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
+API_KEY = os.getenv("AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo")
 if not API_KEY:
     st.error("❌ API Key missing! Please set GEMINI_API_KEY as an environment variable.")
 else:
