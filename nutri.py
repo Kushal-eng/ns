@@ -3,6 +3,8 @@ import google.generativeai as genai
 import pdfkit
 import tempfile
 import os
+sudo apt install wkhtmltopdf    
+brew install wkhtmltopdf  
 
 # Ensure set_page_config is the first Streamlit command
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
