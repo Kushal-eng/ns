@@ -3,12 +3,15 @@ import google.generativeai as genai
 import pdfkit
 import tempfile
 
-genai.configure(api_key="AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
+genai.configure(api_key="YOUR_GEMINI_API_KEY")
 
 def get_gemini_response(prompt):
-    model = genai.GenerativeModel("gemini-1.0-pro-latest")
-    response = model.generate_content(prompt)
-    return response.text
+    try:
+        model = genai.GenerativeModel("gemini-1.0-pro-latest")
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return "⚠️ Error fetching AI response. Please check your API key and model access."
 
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 st.title("🍽️ AI-Powered Nutrient Deficiency & Health Tracker")
