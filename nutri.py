@@ -6,7 +6,7 @@ import tempfile
 genai.configure(api_key="AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
 
 def get_gemini_response(prompt):
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("gemini-1.0-pro-latest")
     response = model.generate_content(prompt)
     return response.text
 
