@@ -2,16 +2,22 @@ import streamlit as st
 import google.generativeai as genai
 import pdfkit
 import tempfile
+import os
 
-genai.configure(api_key="AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
+# Configure Gemini API
+API_KEY = os.getenv("AIzaSyCb0NhBUY35pb_WLqnMrlopnty43y152_s")
+if not API_KEY:
+    st.error("❌ API Key missing! Please set GEMINI_API_KEY as an environment variable.")
+else:
+    genai.configure(api_key=API_KEY)
 
 def get_gemini_response(prompt):
     try:
-        model = genai.GenerativeModel("gemini-1.0-pro-latest")
+        model = genai.GenerativeModel("gemini-1.0-pro-latest")  # Ensure correct model name
         response = model.generate_content(prompt)
-        return response.text
+        return response.text if response and hasattr(response, 'text') else "⚠️ No response received. Try again."
     except Exception as e:
-        return "⚠️ Error fetching AI response. Please check your API key and model access."
+        return f"⚠️ Error fetching AI response. Please check your API key and model access. ({str(e)})"
 
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 st.title("🍽️ AI-Powered Nutrient Deficiency & Health Tracker")
@@ -44,15 +50,18 @@ st.write("### 🍏 Enter the food items you consumed today:")
 food_input = st.text_area("Type your food items (comma-separated):")
 
 def generate_pdf(content):
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-        pdfkit.from_string(content, temp_file.name)
-        return temp_file.name
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+            pdfkit.from_string(content, temp_file.name)
+            return temp_file.name
+    except Exception as e:
+        st.error(f"❌ PDF Generation Failed: {str(e)}")
+        return None
 
 if food_input:
     prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
     
     gemini_output = get_gemini_response(prompt)
-    
     st.write("### 📊 AI-Generated Nutrition Analysis:")
     st.write(gemini_output)
     
@@ -67,8 +76,9 @@ if food_input:
     if st.button("📄 Download Meal Plan as PDF"):
         pdf_content = f"Nutrition Analysis:\n{gemini_output}\n\nMeal Plan for Tomorrow:\n{meal_plan}"
         pdf_path = generate_pdf(pdf_content)
-        with open(pdf_path, "rb") as pdf_file:
-            st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
+        if pdf_path:
+            with open(pdf_path, "rb") as pdf_file:
+                st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
 else:
     st.info("Please enter food items to analyze your diet.")
 
