@@ -1,6 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
-import pdfkit
+from fpdf import FPDF
 import tempfile
 import os
 
@@ -53,8 +53,16 @@ food_input = st.text_area("Type your food items (comma-separated):")
 
 def generate_pdf(content):
     try:
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        pdf.set_font("Arial", style='', size=12)
+        
+        for line in content.split("\n"):
+            pdf.cell(200, 10, txt=line, ln=True, align='L')
+        
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-            pdfkit.from_string(content, temp_file.name)
+            pdf.output(temp_file.name)
             return temp_file.name
     except Exception as e:
         st.error(f"❌ PDF Generation Failed: {str(e)}")
