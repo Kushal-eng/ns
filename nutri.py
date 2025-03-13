@@ -57,16 +57,17 @@ def generate_pdf(content):
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
         pdf.set_font("Arial", style='', size=12)
-        
+
         for line in content.split("\n"):
-            pdf.cell(200, 10, txt=line, ln=True, align='L')
-        
+            pdf.cell(200, 10, txt=line.encode("latin-1", "replace").decode("latin-1"), ln=True, align='L')
+
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-            pdf.output(temp_file.name)
+            pdf.output(temp_file.name, 'F')
             return temp_file.name
     except Exception as e:
         st.error(f"❌ PDF Generation Failed: {str(e)}")
         return None
+
 
 if food_input:
     prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
