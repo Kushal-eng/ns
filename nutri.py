@@ -51,14 +51,10 @@ if height and weight:
 st.write("### 🍏 Enter the food items you consumed today:")
 food_input = st.text_area("Type your food items (comma-separated):")
 
-import pdfkit
-
-config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")  # Update path if needed
-
 def generate_pdf(content):
     try:
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-            pdfkit.from_string(content, temp_file.name, configuration=config)
+            pdfkit.from_string(content, temp_file.name)
             return temp_file.name
     except Exception as e:
         st.error(f"❌ PDF Generation Failed: {str(e)}")
