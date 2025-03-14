@@ -3,6 +3,8 @@ import google.generativeai as genai
 from fpdf import FPDF
 import tempfile
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Ensure set_page_config is the first Streamlit command
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
@@ -51,23 +53,13 @@ if height and weight:
 st.write("### 🍏 Enter the food items you consumed today:")
 food_input = st.text_area("Type your food items (comma-separated):")
 
-def generate_pdf(content):
-    try:
-        pdf = FPDF()
-        pdf.set_auto_page_break(auto=True, margin=15)
-        pdf.add_page()
-        pdf.set_font("Arial", style='', size=12)
-
-        for line in content.split("\n"):
-            pdf.cell(200, 10, txt=line.encode("latin-1", "replace").decode("latin-1"), ln=True, align='L')
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-            pdf.output(temp_file.name, 'F')
-            return temp_file.name
-    except Exception as e:
-        st.error(f"❌ PDF Generation Failed: {str(e)}")
-        return None
-
+def plot_nutrient_chart(nutrient_data):
+    plt.figure(figsize=(8, 5))
+    plt.bar(nutrient_data.keys(), nutrient_data.values(), color=['blue', 'red', 'green', 'orange', 'purple'])
+    plt.xlabel("Nutrients")
+    plt.ylabel("Amount Consumed")
+    plt.title("Daily Nutrient Intake")
+    st.pyplot(plt)
 
 if food_input:
     prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
@@ -83,7 +75,29 @@ if food_input:
     st.write("### 🍽️ AI-Generated Meal Plan for Tomorrow:")
     st.write(meal_plan)
     
+    # Simulated nutrient data for visualization (replace with actual data extraction from AI response)
+    nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
+    st.write("### 📈 Nutrient Intake Chart:")
+    plot_nutrient_chart(nutrient_data)
+    
     # Generate downloadable PDF
+    def generate_pdf(content):
+        try:
+            pdf = FPDF()
+            pdf.set_auto_page_break(auto=True, margin=15)
+            pdf.add_page()
+            pdf.set_font("Arial", style='', size=12)
+            
+            for line in content.split("\n"):
+                pdf.cell(200, 10, txt=line.encode("latin-1", "replace").decode("latin-1"), ln=True, align='L')
+            
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
+                pdf.output(temp_file.name, 'F')
+                return temp_file.name
+        except Exception as e:
+            st.error(f"❌ PDF Generation Failed: {str(e)}")
+            return None
+    
     if st.button("📄 Download Meal Plan as PDF"):
         pdf_content = f"Nutrition Analysis:\n{gemini_output}\n\nMeal Plan for Tomorrow:\n{meal_plan}"
         pdf_path = generate_pdf(pdf_content)
