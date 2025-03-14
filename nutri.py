@@ -49,8 +49,9 @@ if height and weight:
         bmi_category = "obese"
         st.sidebar.error("You are in the obese category. Consult a nutritionist.")
 
-# Sidebar - Nutrient Intake Graphs
-st.sidebar.header("📊 Nutrient Intake Graphs")
+# Sidebar - Option to View Nutrient Intake Graphs
+show_graph = st.sidebar.checkbox("📊 Show Nutrient Intake Graphs")
+
 def plot_nutrient_chart(actual_data, recommended_data):
     nutrients = list(actual_data.keys())
     actual_values = list(actual_data.values())
@@ -59,7 +60,7 @@ def plot_nutrient_chart(actual_data, recommended_data):
     x = np.arange(len(nutrients))
     width = 0.35  # Width of the bars
     
-    fig, ax = plt.subplots(figsize=(6, 4))
+    fig, ax = plt.subplots(figsize=(8, 5))
     ax.bar(x - width/2, actual_values, width, label='Consumed', color='blue')
     ax.bar(x + width/2, recommended_values, width, label='Recommended', color='green')
     
@@ -70,7 +71,7 @@ def plot_nutrient_chart(actual_data, recommended_data):
     ax.set_xticklabels(nutrients, rotation=45)
     ax.legend()
     
-    st.sidebar.pyplot(fig)
+    st.pyplot(fig)
 
 # Food intake input
 st.write("### 🍏 Enter the food items you consumed today:")
@@ -94,8 +95,10 @@ if food_input:
     actual_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
     recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
     
-    # Display graph in the sidebar
-    plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
+    # Show graph if user selects the option in the sidebar
+    if show_graph:
+        st.write("### 📊 Nutrient Intake Comparison")
+        plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
     
     # Generate downloadable PDF
     def generate_pdf(content):
