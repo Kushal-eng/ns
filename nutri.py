@@ -49,10 +49,8 @@ if height and weight:
         bmi_category = "obese"
         st.sidebar.error("You are in the obese category. Consult a nutritionist.")
 
-# Food intake input
-st.write("### 🍏 Enter the food items you consumed today:")
-food_input = st.text_area("Type your food items (comma-separated):")
-
+# Sidebar - Nutrient Intake Graphs
+st.sidebar.header("📊 Nutrient Intake Graphs")
 def plot_nutrient_chart(actual_data, recommended_data):
     nutrients = list(actual_data.keys())
     actual_values = list(actual_data.values())
@@ -61,7 +59,7 @@ def plot_nutrient_chart(actual_data, recommended_data):
     x = np.arange(len(nutrients))
     width = 0.35  # Width of the bars
     
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(6, 4))
     ax.bar(x - width/2, actual_values, width, label='Consumed', color='blue')
     ax.bar(x + width/2, recommended_values, width, label='Recommended', color='green')
     
@@ -69,10 +67,14 @@ def plot_nutrient_chart(actual_data, recommended_data):
     ax.set_ylabel("Amount (mg/g) or % of daily intake")
     ax.set_title("Actual vs Recommended Nutrient Intake")
     ax.set_xticks(x)
-    ax.set_xticklabels(nutrients)
+    ax.set_xticklabels(nutrients, rotation=45)
     ax.legend()
     
-    st.pyplot(fig)
+    st.sidebar.pyplot(fig)
+
+# Food intake input
+st.write("### 🍏 Enter the food items you consumed today:")
+food_input = st.text_area("Type your food items (comma-separated):")
 
 if food_input:
     prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
@@ -92,9 +94,8 @@ if food_input:
     actual_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
     recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
     
-    # Separate section for graphs
-    with st.expander("📊 View Nutrient Intake Graphs"):
-        plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
+    # Display graph in the sidebar
+    plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
     
     # Generate downloadable PDF
     def generate_pdf(content):
