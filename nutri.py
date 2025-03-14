@@ -53,13 +53,26 @@ if height and weight:
 st.write("### 🍏 Enter the food items you consumed today:")
 food_input = st.text_area("Type your food items (comma-separated):")
 
-def plot_nutrient_chart(nutrient_data):
-    plt.figure(figsize=(8, 5))
-    plt.bar(nutrient_data.keys(), nutrient_data.values(), color=['blue', 'red', 'green', 'orange', 'purple'])
-    plt.xlabel("Nutrients")
-    plt.ylabel("Amount Consumed")
-    plt.title("Daily Nutrient Intake")
-    st.pyplot(plt)
+def plot_nutrient_chart(actual_data, recommended_data):
+    nutrients = list(actual_data.keys())
+    actual_values = list(actual_data.values())
+    recommended_values = list(recommended_data.values())
+    
+    x = np.arange(len(nutrients))
+    width = 0.35  # Width of the bars
+    
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.bar(x - width/2, actual_values, width, label='Consumed', color='blue')
+    ax.bar(x + width/2, recommended_values, width, label='Recommended', color='green')
+    
+    ax.set_xlabel("Nutrients")
+    ax.set_ylabel("Amount (mg/g) or % of daily intake")
+    ax.set_title("Actual vs Recommended Nutrient Intake")
+    ax.set_xticks(x)
+    ax.set_xticklabels(nutrients)
+    ax.legend()
+    
+    st.pyplot(fig)
 
 if food_input:
     prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
@@ -76,9 +89,12 @@ if food_input:
     st.write(meal_plan)
     
     # Simulated nutrient data for visualization (replace with actual data extraction from AI response)
-    nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
-    st.write("### 📈 Nutrient Intake Chart:")
-    plot_nutrient_chart(nutrient_data)
+    actual_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
+    recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
+    
+    # Separate section for graphs
+    with st.expander("📊 View Nutrient Intake Graphs"):
+        plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
     
     # Generate downloadable PDF
     def generate_pdf(content):
