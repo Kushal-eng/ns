@@ -10,7 +10,8 @@ import numpy as np
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 
 # Configure Gemini API
-API_KEY = os.getenv("GEMINI_API_KEY")  # Secure API key handling
+API_KEY = "your-api-key-here"  # ✅ Replace with your actual API key
+genai.configure(api_key=API_KEY)
 
 if not API_KEY:
     st.error("❌ API Key missing! Please set GEMINI_API_KEY as an environment variable.")
