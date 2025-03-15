@@ -10,21 +10,43 @@ import numpy as np
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
 
 # Configure Gemini API
-API_KEY = "AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo"  # ✅ Replace with your actual API key
-genai.configure(api_key=API_KEY)
+API_KEY = os.getenv("GEMINI_API_KEY")  # Secure API key handling
 
 if not API_KEY:
     st.error("❌ API Key missing! Please set GEMINI_API_KEY as an environment variable.")
 else:
     genai.configure(api_key=API_KEY)
 
+# Function to get AI-generated response
 def get_gemini_response(prompt):
     try:
-        model = genai.GenerativeModel("gemini-1.5-pro-latest")  # Updated model version
+        model = genai.GenerativeModel("gemini-1.5-pro-latest")  # Use the latest model version
         response = model.generate_content(prompt)
         return response.text if response and hasattr(response, 'text') else "⚠️ No response received. Try again."
     except Exception as e:
         return f"⚠️ Error fetching AI response. Please check your API key and model access. ({str(e)})"
+
+# Food Nutrient Data (per 100g or per serving)
+food_nutrient_data = {
+    "roti": {"Protein": 2.5, "Iron": 0.9, "Calcium": 10, "Vitamin C": 0, "B12": 0},
+    "dal": {"Protein": 9, "Iron": 3.3, "Calcium": 45, "Vitamin C": 1, "B12": 0},
+    "curd": {"Protein": 3.1, "Iron": 0.2, "Calcium": 120, "Vitamin C": 1, "B12": 0.4},
+    "chicken": {"Protein": 27, "Iron": 1.3, "Calcium": 15, "Vitamin C": 0, "B12": 0.5},
+    "fish": {"Protein": 20, "Iron": 0.9, "Calcium": 12, "Vitamin C": 0, "B12": 1.2},
+    "milk": {"Protein": 3.4, "Iron": 0.1, "Calcium": 125, "Vitamin C": 0, "B12": 1.1},
+}
+
+# Function to calculate total nutrients from user input
+def calculate_nutrient_intake(user_foods):
+    total_nutrients = {"Protein": 0, "Iron": 0, "Calcium": 0, "Vitamin C": 0, "B12": 0}
+    
+    for food in user_foods:
+        food = food.strip().lower()
+        if food in food_nutrient_data:
+            for nutrient, value in food_nutrient_data[food].items():
+                total_nutrients[nutrient] += value
+    
+    return total_nutrients
 
 st.title("🍽️ AI-Powered Nutrition & Health Tracker")
 
@@ -60,6 +82,9 @@ with tab1:
     food_input = st.text_area("Type your food items (comma-separated):")
 
     if food_input:
+        user_foods = food_input.split(",")
+        actual_nutrient_data = calculate_nutrient_intake(user_foods)
+        
         prompt = f"The user consumed {food_input}. Their BMI category is {bmi_category}. Based on this, analyze potential nutrient deficiencies, provide detailed nutrition insights, and recommend food-based improvements."
         gemini_output = get_gemini_response(prompt)
         st.write("### 📊 AI-Generated Nutrition Analysis:")
@@ -69,38 +94,10 @@ with tab1:
         meal_plan = get_gemini_response(recommendation_prompt)
         st.write("### 🍽️ AI-Generated Meal Plan for Tomorrow:")
         st.write(meal_plan)
-        
-        # Generate downloadable PDF
-        def generate_pdf(content):
-            try:
-                pdf = FPDF()
-                pdf.set_auto_page_break(auto=True, margin=15)
-                pdf.add_page()
-                pdf.set_font("Arial", style='', size=12)
-                
-                for line in content.split("\n"):
-                    pdf.cell(200, 10, txt=line.encode("latin-1", "replace").decode("latin-1"), ln=True, align='L')
-                
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
-                    pdf.output(temp_file.name, 'F')
-                    return temp_file.name
-            except Exception as e:
-                st.error(f"❌ PDF Generation Failed: {str(e)}")
-                return None
-        
-        if st.button("📄 Download Meal Plan as PDF"):
-            pdf_content = f"Nutrition Analysis:\n{gemini_output}\n\nMeal Plan for Tomorrow:\n{meal_plan}"
-            pdf_path = generate_pdf(pdf_content)
-            if pdf_path:
-                with open(pdf_path, "rb") as pdf_file:
-                    st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
 
 # Nutrient Intake Graphs (Tab 2)
 with tab2:
     st.write("### 📊 Nutrient Intake Comparison Chart")
-    
-    # Simulated nutrient data (replace with actual AI-generated data later)
-    actual_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
     recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
     
     def plot_nutrient_chart(actual_data, recommended_data):
@@ -109,7 +106,7 @@ with tab2:
         recommended_values = list(recommended_data.values())
         
         x = np.arange(len(nutrients))
-        width = 0.35  # Width of the bars
+        width = 0.35  # Width of bars
         
         fig, ax = plt.subplots(figsize=(8, 5))
         ax.bar(x - width/2, actual_values, width, label='Consumed', color='blue')
@@ -124,7 +121,8 @@ with tab2:
         
         st.pyplot(fig)
     
-    plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
+    if food_input:
+        plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
 
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
