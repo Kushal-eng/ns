@@ -15,7 +15,7 @@ st.markdown("""
     <style>
         .stApp {background-color: #f5f5f5;}
         h1 {color: #2E86C1; text-align: center; font-size: 36px;}
-        .stTabs {background-color: blue; border-radius: 10px; padding: 15px;}
+        .stTabs {background-color: white; border-radius: 10px; padding: 15px;}
         .stSidebar {background-color: #f0f0f0; padding: 15px; border-radius: 10px;}
         .stButton>button {background-color: #2E86C1; color: white; font-size: 16px;}
         .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 1px solid #2E86C1;}
