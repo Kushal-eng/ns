@@ -5,6 +5,7 @@ import tempfile
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
 
 # Ensure set_page_config is the first Streamlit command
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
@@ -54,10 +55,15 @@ if height and weight:
         bmi_category = "obese"
         st.sidebar.error("You are in the obese category. Consult a nutritionist.")
         
-uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
-if uploaded_file is not None:
-    st.image(uploaded_file, caption="Uploaded Food Image")
-    # Pass the image to AI for recognition (Gemini Vision API)
+st.write("### 📷 Upload an Image of Your Meal:")
+    uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
+    
+    if uploaded_file is not None:
+        st.image(uploaded_file, caption="Uploaded Food Image")
+        image = Image.open(uploaded_file)
+        image_analysis = analyze_food_image(image)
+        st.write("### 🤖 AI Food Analysis:")
+        st.write(image_analysis)
 
 
 # Current Nutrients in Your Diet (Tab 1)
