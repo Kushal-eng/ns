@@ -67,18 +67,21 @@ def analyze_food_image(image):
     except Exception as e:
         return f"⚠️ Error processing image: {str(e)}"
 
-# Handling uploaded file (Correct Placement)
-uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
+# Ensure only one instance of file uploader with a unique label
+uploaded_file = st.file_uploader("📷 Upload Your Meal Image Here", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    st.image(uploaded_file, caption="Uploaded Food Image", use_column_width=True)
+    st.image(uploaded_file, caption="📸 Uploaded Food Image", use_column_width=True)
     image = Image.open(uploaded_file)
     
     st.write("### 🤖 AI Food Analysis in Progress...")
+
+    # Call AI for food recognition
+    image_analysis = analyze_food_image(image)
     
-    image_analysis = analyze_food_image(image)  # Call function correctly
     st.write("### 📊 AI-Generated Food Analysis:")
     st.write(image_analysis)
+
 
 
 # Current Nutrients in Your Diet (Tab 1)
