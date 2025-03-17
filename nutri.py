@@ -61,19 +61,24 @@ if height and weight:
     # Function to analyze food image using Gemini Vision API
 def analyze_food_image(image):
     try:
-        model = genai.GenerativeModel("gemini-1.5-pro-latest")  # Use the Gemini Vision model
-        response = model.generate_content([image])
+        model = genai.GenerativeModel("gemini-1.5-vision")  # Use Gemini Vision for image analysis
+        response = model.generate_content([image])  # Process image using AI
         return response.text if response and hasattr(response, 'text') else "⚠️ Unable to analyze image. Try again."
     except Exception as e:
         return f"⚠️ Error processing image: {str(e)}"
 
+# Handling uploaded file (Correct Placement)
+uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
+
+if uploaded_file is not None:
+    st.image(uploaded_file, caption="Uploaded Food Image", use_column_width=True)
+    image = Image.open(uploaded_file)
     
-    if uploaded_file is not None:
-        st.image(uploaded_file, caption="Uploaded Food Image")
-        image = Image.open(uploaded_file)
-        image_analysis = analyze_food_image(image)
-        st.write("### 🤖 AI Food Analysis:")
-        st.write(image_analysis)
+    st.write("### 🤖 AI Food Analysis in Progress...")
+    
+    image_analysis = analyze_food_image(image)  # Call function correctly
+    st.write("### 📊 AI-Generated Food Analysis:")
+    st.write(image_analysis)
 
 
 # Current Nutrients in Your Diet (Tab 1)
