@@ -46,28 +46,43 @@ st.title("🍽️ AI-Powered Nutrition & Health Tracker")
 # Tabs for sections like the reference image
 tab1, tab2, tab3, tab4= st.tabs(["🍏 Current Nutrients in Your Diet", "📊 Nutrient Intake Graphs", "🤖 Nutrition Chatbot","🧬 Deficiency Checker"])
 
-# Sidebar - BMI Calculator
+# Sidebar - BMI Calculator with new styling
 st.sidebar.header("⚖️ BMI Calculator")
-age = st.sidebar.number_input("Enter your age:", min_value=1, max_value=120, step=1)
-height = st.sidebar.number_input("Enter your height (cm):", min_value=50, max_value=250, step=1)
-weight = st.sidebar.number_input("Enter your weight (kg):", min_value=10, max_value=300, step=1)
+st.sidebar.markdown("<div class='big-font'>Enter your details below:</div>", unsafe_allow_html=True)
+gender = st.sidebar.selectbox("Gender:", ["Male", "Female", "Other"])
+age = st.sidebar.number_input("Age:", min_value=1, max_value=120, step=1)
+height = st.sidebar.number_input("Height (cm):", min_value=50, max_value=250, step=1)
+weight = st.sidebar.number_input("Weight (kg):", min_value=10, max_value=300, step=1)
+activity_level = st.sidebar.selectbox("Activity Level:", ["Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Super Active"])
 
 bmi_category = ""
+calories_needed = 0
 if height and weight:
     bmi = weight / ((height / 100) ** 2)
-    st.sidebar.write(f"### Your BMI: {bmi:.2f}")
+    st.sidebar.markdown(f"<div class='big-font'>Your BMI: {bmi:.2f}</div>", unsafe_allow_html=True)
     if bmi < 18.5:
         bmi_category = "underweight"
-        st.sidebar.warning("You are underweight. Consider a balanced diet.")
+        st.sidebar.warning("⚠️ You are underweight. Consider a balanced diet.")
     elif 18.5 <= bmi < 24.9:
         bmi_category = "normal"
-        st.sidebar.success("Your BMI is normal.")
+        st.sidebar.success("✅ Your BMI is normal.")
     elif 25 <= bmi < 29.9:
         bmi_category = "overweight"
-        st.sidebar.warning("You are overweight. Consider a healthy diet plan.")
+        st.sidebar.warning("⚠️ You are overweight. Consider a healthy diet plan.")
     else:
         bmi_category = "obese"
-        st.sidebar.error("You are in the obese category. Consult a nutritionist.")
+        st.sidebar.error("🚨 You are in the obese category. Consult a nutritionist.")
+    
+    # Calculate daily calorie needs
+    if gender == "Male":
+        bmr = 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)
+    else:
+        bmr = 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)
+    
+    activity_multiplier = {"Sedentary": 1.2, "Lightly Active": 1.375, "Moderately Active": 1.55, "Very Active": 1.725, "Super Active": 1.9}
+    calories_needed = bmr * activity_multiplier[activity_level]
+    st.sidebar.markdown(f"### 🔥 Estimated Daily Calorie Needs: {int(calories_needed)} kcal")
+
 
 # Updated to use `use_container_width` instead of `use_column_width`
 uploaded_file = st.file_uploader("📷 Upload Your Meal Image Here", type=["jpg", "png", "jpeg"])
