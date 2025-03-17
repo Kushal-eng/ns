@@ -6,6 +6,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import speech_recognition as sr
 
 # Set page configuration
 st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", layout="wide")
@@ -188,5 +189,18 @@ with tab3:
     if user_query:
         response = get_gemini_response(user_query)
         st.write(response)
+
+st.markdown("### 🎙️ Speak Your Meal for AI Analysis")
+if st.button("Start Recording"):
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        st.write("Listening...")
+        audio = recognizer.listen(source)
+    try:
+        meal_text = recognizer.recognize_google(audio)
+        st.success(f"Recognized Meal: {meal_text}")
+    except sr.UnknownValueError:
+        st.error("Could not understand your speech. Try again.")
+
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
