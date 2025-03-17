@@ -10,17 +10,19 @@ from PIL import Image
 # Set page configuration
 st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", layout="wide")
 
-# Custom Styling
+# Custom Styling with modern UI enhancements
 st.markdown("""
     <style>
-        .stApp {background-color: #f5f5f5;}
-        h1 {color: #2E86C1; text-align: center; font-size: 36px;}
-        .stTabs {background-color: white; border-radius: 10px; padding: 15px;}
-        .stSidebar {background-color: #f0f0f0; padding: 15px; border-radius: 10px;}
-        .stButton>button {background-color: #2E86C1; color: white; font-size: 16px;}
-        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 1px solid #2E86C1;}
+        .stApp {background: linear-gradient(to right, #ffefba, #ffffff);}
+        h1 {color: #E74C3C; text-align: center; font-size: 42px; font-weight: bold;}
+        .stTabs {background-color: #ffffff; border-radius: 12px; padding: 15px;}
+        .stSidebar {background: #F39C12; color: white; padding: 15px; border-radius: 12px;}
+        .stButton>button {background-color: #E74C3C; color: white; font-size: 18px; border-radius: 8px; padding: 10px;}
+        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 2px solid #E74C3C;}
+        .big-font {font-size:20px !important; font-weight: bold;}
     </style>
 """, unsafe_allow_html=True)
+
 
 # Configure Gemini API
 API_KEY = "AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo"  # ✅ Replace with your actual API key
