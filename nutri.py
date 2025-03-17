@@ -30,7 +30,7 @@ def get_gemini_response(prompt):
 st.title("🍽️ AI-Powered Nutrition & Health Tracker")
 
 # Tabs for sections like the reference image
-tab1, tab2 = st.tabs(["🍏 Current Nutrients in Your Diet", "📊 Nutrient Intake Graphs"])
+tab1, tab2 = st.tabs(["🍏 Current Nutrients in Your Diet", "📊 Nutrient Intake Graphs", "🤖 Nutrition Chatbot"])
 
 # Sidebar - BMI Calculator
 st.sidebar.header("⚖️ BMI Calculator")
@@ -170,6 +170,12 @@ with tab2:
         st.pyplot(fig)
     
     plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
-
+    # Nutrition Chatbot (Tab 3)
+with tab3:
+    st.write("### 🤖 Ask Your Nutrition Questions!")
+    user_query = st.text_input("Ask me anything about nutrition:")
+    if user_query:
+        response = get_gemini_response(user_query)
+        st.write(response)
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
