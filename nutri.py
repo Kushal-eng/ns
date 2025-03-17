@@ -55,7 +55,7 @@ if height and weight:
         bmi_category = "obese"
         st.sidebar.error("You are in the obese category. Consult a nutritionist.")
         
-st.write("### 📷 Upload an Image of Your Meal:")
+    st.write("### 📷 Upload an Image of Your Meal:")
     uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
     
     if uploaded_file is not None:
