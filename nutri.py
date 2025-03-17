@@ -30,7 +30,7 @@ def get_gemini_response(prompt):
 st.title("🍽️ AI-Powered Nutrition & Health Tracker")
 
 # Tabs for sections like the reference image
-tab1, tab2 = st.tabs(["🍏 Current Nutrients in Your Diet", "📊 Nutrient Intake Graphs", "🤖 Nutrition Chatbot"])
+tab1, tab2, tab3= st.tabs(["🍏 Current Nutrients in Your Diet", "📊 Nutrient Intake Graphs", "🤖 Nutrition Chatbot"])
 
 # Sidebar - BMI Calculator
 st.sidebar.header("⚖️ BMI Calculator")
