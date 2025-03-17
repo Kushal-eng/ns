@@ -190,17 +190,30 @@ with tab3:
         response = get_gemini_response(user_query)
         st.write(response)
 
+try:
+    import speech_recognition as sr
+    pyaudio_installed = True
+except ImportError:
+    pyaudio_installed = False
+    st.error("⚠️ PyAudio is not installed. Voice recognition will not work. Please check dependencies.")
+
 st.markdown("### 🎙️ Speak Your Meal for AI Analysis")
-if st.button("Start Recording"):
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        st.write("Listening...")
-        audio = recognizer.listen(source)
-    try:
-        meal_text = recognizer.recognize_google(audio)
-        st.success(f"Recognized Meal: {meal_text}")
-    except sr.UnknownValueError:
-        st.error("Could not understand your speech. Try again.")
+
+if pyaudio_installed:
+    if st.button("Start Recording"):
+        recognizer = sr.Recognizer()
+        with sr.Microphone() as source:
+            st.write("🎤 Listening...")
+            audio = recognizer.listen(source)
+        try:
+            meal_text = recognizer.recognize_google(audio)
+            st.success(f"✅ Recognized Meal: {meal_text}")
+        except sr.UnknownValueError:
+            st.error("❌ Could not understand your speech. Try again.")
+        except sr.RequestError:
+            st.error("⚠️ Speech recognition service is unavailable. Check your internet connection.")
+else:
+    st.warning("🛑 Speech recognition is disabled because PyAudio is missing.")
 
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
