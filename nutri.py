@@ -57,6 +57,16 @@ if height and weight:
         
     st.write("### 📷 Upload an Image of Your Meal:")
     uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
+
+    # Function to analyze food image using Gemini Vision API
+def analyze_food_image(image):
+    try:
+        model = genai.GenerativeModel("gemini-1.5-pro-latest")  # Use the Gemini Vision model
+        response = model.generate_content([image])
+        return response.text if response and hasattr(response, 'text') else "⚠️ Unable to analyze image. Try again."
+    except Exception as e:
+        return f"⚠️ Error processing image: {str(e)}"
+
     
     if uploaded_file is not None:
         st.image(uploaded_file, caption="Uploaded Food Image")
