@@ -3,5 +3,3 @@ google-generativeai
 fpdf
 matplotlib
 numpy
-speechrecognition
-pyaudio
