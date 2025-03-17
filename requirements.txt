@@ -4,3 +4,4 @@ fpdf
 matplotlib
 numpy
 speechrecognition
+pyaudio
