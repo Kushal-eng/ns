@@ -67,14 +67,23 @@ def analyze_food_image(image):
     except Exception as e:
         return f"⚠️ Error processing image: {str(e)}"
 
-# Ensure only one instance of file uploader with a unique label
+# Updated to use `use_container_width` instead of `use_column_width`
 uploaded_file = st.file_uploader("📷 Upload Your Meal Image Here", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
-    st.image(uploaded_file, caption="📸 Uploaded Food Image", use_column_width=True)
+    st.image(uploaded_file, caption="📸 Uploaded Food Image", use_container_width=True)
     image = Image.open(uploaded_file)
     
     st.write("### 🤖 AI Food Analysis in Progress...")
+
+    # Correcting the model to `gemini-1.5-pro-latest` (Vision model not available)
+    def analyze_food_image(image):
+        try:
+            model = genai.GenerativeModel("gemini-1.5-pro-latest")  # Use supported model
+            response = model.generate_content(["Describe the food items in this image.", image])
+            return response.text if response and hasattr(response, 'text') else "⚠️ Unable to analyze image. Try again."
+        except Exception as e:
+            return f"⚠️ Error processing image: {str(e)}"
 
     # Call AI for food recognition
     image_analysis = analyze_food_image(image)
