@@ -6,6 +6,8 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import speech_recognition as sr
+
 
 # Ensure set_page_config is the first Streamlit command
 st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
@@ -170,6 +172,17 @@ with tab2:
         st.pyplot(fig)
     
     plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
+
+r = sr.Recognizer()
+with sr.Microphone() as source:
+    st.write("🎤 Speak now...")
+    audio = r.listen(source)
+    try:
+        food_input = r.recognize_google(audio)
+        st.write(f"🍽️ You said: {food_input}")
+    except sr.UnknownValueError:
+        st.write("Sorry, could not understand your speech.")
+
 
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
