@@ -67,10 +67,10 @@ def generate_pdf(content):
         
         for section in content.split("\n\n"):
             pdf.set_font("Helvetica", 'B', 12)
-            pdf.multi_cell(0, 8, section.split("\n")[0], align='L')
+            pdf.multi_cell(0, 8, section.split("\n")[0].encode('utf-8', 'ignore').decode('utf-8'), align='L')
             pdf.ln(2)
             pdf.set_font("Helvetica", '', 11)
-            pdf.multi_cell(0, 7, "\n".join(section.split("\n")[1:]), align='L')
+            pdf.multi_cell(0, 7, "\n".join(section.split("\n")[1:]).encode('utf-8', 'ignore').decode('utf-8'), align='L')
             pdf.ln(4)
         
         # Footer
@@ -106,6 +106,7 @@ with tab1:
             if pdf_path:
                 with open(pdf_path, "rb") as pdf_file:
                     st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
+
 
 # Nutrient Intake Graphs (Tab 2)
 with tab2:
