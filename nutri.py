@@ -7,8 +7,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-# Ensure set_page_config is the first Streamlit command
-st.set_page_config(page_title="AI-Powered Nutrition & Health Tracker", layout="wide")
+# Set page configuration
+st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", layout="wide")
+
+# Custom Styling
+st.markdown("""
+    <style>
+        .stApp {background-color: #f5f5f5;}
+        h1 {color: #2E86C1; text-align: center; font-size: 36px;}
+        .stTabs {background-color: white; border-radius: 10px; padding: 15px;}
+        .stSidebar {background-color: #f0f0f0; padding: 15px; border-radius: 10px;}
+        .stButton>button {background-color: #2E86C1; color: white; font-size: 16px;}
+        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 1px solid #2E86C1;}
+    </style>
+""", unsafe_allow_html=True)
 
 # Configure Gemini API
 API_KEY = "AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo"  # ✅ Replace with your actual API key
