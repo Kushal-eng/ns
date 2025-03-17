@@ -53,6 +53,12 @@ if height and weight:
     else:
         bmi_category = "obese"
         st.sidebar.error("You are in the obese category. Consult a nutritionist.")
+        
+uploaded_file = st.file_uploader("Upload a photo of your meal", type=["jpg", "png", "jpeg"])
+if uploaded_file is not None:
+    st.image(uploaded_file, caption="Uploaded Food Image")
+    # Pass the image to AI for recognition (Gemini Vision API)
+
 
 # Current Nutrients in Your Diet (Tab 1)
 def generate_pdf(content):
