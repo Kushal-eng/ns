@@ -190,30 +190,33 @@ with tab3:
         response = get_gemini_response(user_query)
         st.write(response)
 
-try:
-    import speech_recognition as sr
-    pyaudio_installed = True
-except ImportError:
-    pyaudio_installed = False
-    st.error("⚠️ PyAudio is not installed. Voice recognition will not work. Please check dependencies.")
 
 st.markdown("### 🎙️ Speak Your Meal for AI Analysis")
 
-if pyaudio_installed:
-    if st.button("Start Recording"):
-        recognizer = sr.Recognizer()
-        with sr.Microphone() as source:
-            st.write("🎤 Listening...")
-            audio = recognizer.listen(source)
-        try:
-            meal_text = recognizer.recognize_google(audio)
-            st.success(f"✅ Recognized Meal: {meal_text}")
-        except sr.UnknownValueError:
-            st.error("❌ Could not understand your speech. Try again.")
-        except sr.RequestError:
-            st.error("⚠️ Speech recognition service is unavailable. Check your internet connection.")
-else:
-    st.warning("🛑 Speech recognition is disabled because PyAudio is missing.")
+st.markdown("""
+    <script>
+        function startRecording() {
+            var recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.onresult = function(event) {
+                var transcript = event.results[0][0].transcript;
+                var output = document.getElementById("voiceOutput");
+                output.value = transcript;
+                var event = new Event('input', { bubbles: true });
+                output.dispatchEvent(event);
+            };
+            recognition.start();
+        }
+    </script>
+    <button onclick="startRecording()">🎙️ Click to Speak</button>
+    <input type="text" id="voiceOutput" style="width: 100%; padding: 10px; margin-top: 10px;" />
+""", unsafe_allow_html=True)
+
+# Capture the speech-to-text input
+voice_input = st.text_input("Recognized Speech:")
+
+if voice_input:
+    st.success(f"✅ Recognized Meal: {voice_input}")
 
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
