@@ -3,4 +3,6 @@ google-generativeai
 fpdf
 matplotlib
 numpy
-PyAudio
+pyaudio
+speechrecognition
+portaudio19-dev
