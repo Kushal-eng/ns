@@ -195,27 +195,43 @@ st.markdown("### 🎙️ Speak Your Meal for AI Analysis")
 st.markdown("""
     <script>
         function startRecording() {
-            var recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+            var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+            
             recognition.onresult = function(event) {
                 var transcript = event.results[0][0].transcript;
-                var output = document.getElementById("voiceOutput");
-                output.value = transcript;
-                var event = new Event('input', { bubbles: true });
-                output.dispatchEvent(event);
+                document.getElementById("voiceOutput").value = transcript;
+                document.getElementById("voiceOutput").dispatchEvent(new Event("input"));
             };
+            
+            recognition.onerror = function(event) {
+                console.error("Speech recognition error:", event.error);
+            };
+
             recognition.start();
         }
     </script>
+    
     <button onclick="startRecording()">🎙️ Click to Speak</button>
-    <input type="text" id="voiceOutput" style="width: 100%; padding: 10px; margin-top: 10px;" />
+    <input type="text" id="voiceOutput" oninput="setInput(this.value)" style="width: 100%; padding: 10px; margin-top: 10px;" />
+    
+    <script>
+        function setInput(value) {
+            const streamlitInput = window.parent.document.querySelectorAll('input[data-testid="stTextInput"]');
+            if (streamlitInput.length > 0) {
+                streamlitInput[0].value = value;
+                streamlitInput[0].dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+    </script>
 """, unsafe_allow_html=True)
 
-# Capture the speech-to-text input
+# Capture speech input into a Streamlit text box
 voice_input = st.text_input("Recognized Speech:")
 
 if voice_input:
     st.success(f"✅ Recognized Meal: {voice_input}")
-
 st.write("---")
 st.write("💡 **Tip:** Try including diverse food groups like grains, proteins, vegetables, and dairy for a balanced diet!")
