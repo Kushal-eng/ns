@@ -213,7 +213,7 @@ if food_input:
  
         
         # Plot Graph
-        def plot_nutrient_chart(actual_data, recommended_data):
+    def plot_nutrient_chart(actual_data, recommended_data):
             nutrients = list(actual_data.keys())
             actual_values = list(actual_data.values())
             recommended_values = list(recommended_data.values())
