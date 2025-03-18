@@ -15,17 +15,16 @@ st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", l
 # Custom Styling with modern UI enhancements (Inspired by Unacademy UI)
 st.markdown("""
     <style>
-        .stApp {background: linear-gradient(to right, #F8F9FA, #FFFFFF);}
-        h1 {color: #0F4C81; text-align: center; font-size: 42px; font-weight: bold;}
+        .stApp {background: linear-gradient(to right, #E8F5E9, #FFFFFF);}
+        h1 {color: #2E7D32; text-align: center; font-size: 42px; font-weight: bold;}
         .stTabs {background-color: #ffffff; border-radius: 12px; padding: 15px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);}
-        .stSidebar {background: #1E293B; color: white; padding: 15px; border-radius: 12px;}
-        .stButton>button {background-color: #0F4C81; color: white; font-size: 18px; border-radius: 8px; padding: 10px; border: none;}
-        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 2px solid #0F4C81; background-color: #F8F9FA;}
-        .big-font {font-size:20px !important; font-weight: bold; color: #0F4C81;}
-        .stSidebar select, .stSidebar input {border-radius: 8px; padding: 8px; background-color: #F8F9FA; color: #1E293B; border: 1px solid #D1D5DB;}
+        .stSidebar {background: #1B5E20; color: white; padding: 15px; border-radius: 12px;}
+        .stButton>button {background-color: #43A047; color: white; font-size: 18px; border-radius: 8px; padding: 10px; border: none;}
+        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 2px solid #388E3C; background-color: #E8F5E9;}
+        .big-font {font-size:20px !important; font-weight: bold; color: #2E7D32;}
+        .stSidebar select, .stSidebar input {border-radius: 8px; padding: 8px; background-color: #E8F5E9; color: #1B5E20; border: 1px solid #388E3C;}
     </style>
 """, unsafe_allow_html=True)
-
 
 # Configure Gemini API
 API_KEY = "AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo"  # ✅ Replace with your actual API key
