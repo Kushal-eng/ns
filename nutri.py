@@ -11,15 +11,18 @@ from PIL import Image
 st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", layout="wide")
 
 # Custom Styling with modern UI enhancements
+
+# Custom Styling with modern UI enhancements (Inspired by Unacademy UI)
 st.markdown("""
     <style>
-        .stApp {background: linear-gradient(to right, #ffefba, #ffffff);}
-        h1 {color: #E74C3C; text-align: center; font-size: 42px; font-weight: bold;}
-        .stTabs {background-color: #ffffff; border-radius: 12px; padding: 15px;}
-        .stSidebar {background: #F39C12; color: white; padding: 15px; border-radius: 12px;}
-        .stButton>button {background-color: #E74C3C; color: white; font-size: 18px; border-radius: 8px; padding: 10px;}
-        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 2px solid #E74C3C;}
-        .big-font {font-size:20px !important; font-weight: bold;}
+        .stApp {background: linear-gradient(to right, #F8F9FA, #FFFFFF);}
+        h1 {color: #0F4C81; text-align: center; font-size: 42px; font-weight: bold;}
+        .stTabs {background-color: #ffffff; border-radius: 12px; padding: 15px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);}
+        .stSidebar {background: #1E293B; color: white; padding: 15px; border-radius: 12px;}
+        .stButton>button {background-color: #0F4C81; color: white; font-size: 18px; border-radius: 8px; padding: 10px; border: none;}
+        .stTextInput>div>div>input {border-radius: 10px; padding: 10px; border: 2px solid #0F4C81; background-color: #F8F9FA;}
+        .big-font {font-size:20px !important; font-weight: bold; color: #0F4C81;}
+        .stSidebar select, .stSidebar input {border-radius: 8px; padding: 8px; background-color: #F8F9FA; color: #1E293B; border: 1px solid #D1D5DB;}
     </style>
 """, unsafe_allow_html=True)
 
