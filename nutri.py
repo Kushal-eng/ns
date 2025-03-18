@@ -6,6 +6,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
+import json
 
 # Set page configuration
 st.set_page_config(page_title="🍽️ AI-Powered Nutrition & Health Tracker", layout="wide")
