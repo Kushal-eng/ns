@@ -172,12 +172,12 @@ if food_input:
     nutrient_prompt = f"""
     Analyze the nutritional content of the following foods: {food_input}. 
     Provide values for Protein, Iron, Calcium, Vitamin C, and B12.
-    Respond ONLY in JSON format like this:
+    Respond ONLY in this exact JSON format without extra text:
     {{
-        "Protein": 50, 
-        "Iron": 18, 
-        "Calcium": 1000, 
-        "Vitamin C": 90, 
+        "Protein": 50,
+        "Iron": 18,
+        "Calcium": 1000,
+        "Vitamin C": 90,
         "B12": 2.4
     }}
     """
@@ -186,19 +186,31 @@ if food_input:
 
     # Ensure response is valid JSON
     try:
-        nutrient_data = nutrient_data.strip("```json").strip("```")  # Remove AI-added markdown formatting
+        # Remove any unwanted AI-generated text or code blocks
+        nutrient_data = nutrient_data.strip().strip("```json").strip("```")
+        
+        # Parse the cleaned AI response
         user_nutrient_data = json.loads(nutrient_data)
-    except (json.JSONDecodeError, TypeError):
-        st.error("⚠️ Error parsing AI response. Displaying default values.")
-        user_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}  # Default values
+
+        # Validate if the AI returned correct keys
+        required_keys = {"Protein", "Iron", "Calcium", "Vitamin C", "B12"}
+        if not required_keys.issubset(user_nutrient_data.keys()):
+            raise ValueError("Missing expected keys in AI response.")
+
+    except (json.JSONDecodeError, ValueError, TypeError) as e:
+        st.error(f"⚠️ Error parsing AI response: {str(e)}. Displaying default values.")
+        user_nutrient_data = {
+            "Protein": 50,
+            "Iron": 18,
+            "Calcium": 1000,
+            "Vitamin C": 90,
+            "B12": 2.4
+        }  # Default values
 
     # Display extracted nutrient data in a table
     st.write("### 🔍 Nutrient Breakdown from Your Input")
     st.table(user_nutrient_data)
-
-    
-        
-       
+ 
         
         # Plot Graph
         def plot_nutrient_chart(actual_data, recommended_data):
