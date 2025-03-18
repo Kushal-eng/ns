@@ -164,19 +164,27 @@ with tab1:
             if pdf_path:
                 with open(pdf_path, "rb") as pdf_file:
                     st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
-
 # Nutrient Intake Graphs (Tab 2)
 with tab2:
     st.write("### 📊 Nutrient Intake Comparison Chart")
     
     if food_input:
         # AI Request to calculate nutrient levels
-        nutrient_prompt = f"Analyze the nutritional content of the following foods: {food_input}. Provide values for Protein, Iron, Calcium, Vitamin C, and B12."
+        nutrient_prompt = f"Analyze the nutritional content of the following foods: {food_input}. Provide values for Protein, Iron, Calcium, Vitamin C, and B12 in JSON format."
         nutrient_data = get_gemini_response(nutrient_prompt)
         
-        # Dummy structure to parse AI output (needs proper integration based on AI response format)
-        user_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}  # Replace with AI-extracted values
+        # Convert AI response into structured format
+        try:
+            user_nutrient_data = json.loads(nutrient_data)
+        except json.JSONDecodeError:
+            st.error("⚠️ Error parsing AI response. Displaying default values.")
+            user_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}  # Default values
+        
         recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
+        
+        # Display extracted nutrient data in a table
+        st.write("### 🔍 Nutrient Breakdown from Your Input")
+        st.table(user_nutrient_data)
         
         # Plot Graph
         def plot_nutrient_chart(actual_data, recommended_data):
