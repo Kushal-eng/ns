@@ -234,7 +234,7 @@ if food_input:
             
             st.pyplot(fig)
         
-        plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
+    plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
 
     # Nutrition Chatbot (Tab 3)
 with tab3:
