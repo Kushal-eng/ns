@@ -197,7 +197,7 @@ if food_input:
         if not required_keys.issubset(user_nutrient_data.keys()):
             raise ValueError("Missing expected keys in AI response.")
 
-    except (json.decoder.JSONDecodeError, ValueError, TypeError) as e:
+    except Exception as e:
         st.error(f"⚠️ Error parsing AI response: {str(e)}. Displaying default values.")
         user_nutrient_data = {
             "Protein": 50,
