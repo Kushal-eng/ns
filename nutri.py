@@ -169,9 +169,6 @@ with tab1:
 with tab2:
     st.write("### 📊 Nutrient Intake Comparison Chart")
     
-    # User food input
-    food_input = st.text_area("Enter the food items you consumed today (comma-separated):")
-    
     if food_input:
         # AI Request to calculate nutrient levels
         nutrient_prompt = f"Analyze the nutritional content of the following foods: {food_input}. Provide values for Protein, Iron, Calcium, Vitamin C, and B12."
@@ -204,7 +201,7 @@ with tab2:
             st.pyplot(fig)
         
         plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
-        
+
     # Nutrition Chatbot (Tab 3)
 with tab3:
     st.write("### 🤖 Ask Your Nutrition Questions!")
