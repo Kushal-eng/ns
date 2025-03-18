@@ -169,32 +169,42 @@ with tab1:
 with tab2:
     st.write("### 📊 Nutrient Intake Comparison Chart")
     
-    # Simulated nutrient data (replace with actual AI-generated data later)
-    actual_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
-    recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
+    # User food input
+    food_input = st.text_area("Enter the food items you consumed today (comma-separated):")
     
-    def plot_nutrient_chart(actual_data, recommended_data):
-        nutrients = list(actual_data.keys())
-        actual_values = list(actual_data.values())
-        recommended_values = list(recommended_data.values())
+    if food_input:
+        # AI Request to calculate nutrient levels
+        nutrient_prompt = f"Analyze the nutritional content of the following foods: {food_input}. Provide values for Protein, Iron, Calcium, Vitamin C, and B12."
+        nutrient_data = get_gemini_response(nutrient_prompt)
         
-        x = np.arange(len(nutrients))
-        width = 0.35  # Width of the bars
+        # Dummy structure to parse AI output (needs proper integration based on AI response format)
+        user_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}  # Replace with AI-extracted values
+        recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
         
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.bar(x - width/2, actual_values, width, label='Consumed', color='blue')
-        ax.bar(x + width/2, recommended_values, width, label='Recommended', color='green')
+        # Plot Graph
+        def plot_nutrient_chart(actual_data, recommended_data):
+            nutrients = list(actual_data.keys())
+            actual_values = list(actual_data.values())
+            recommended_values = list(recommended_data.values())
+            
+            x = np.arange(len(nutrients))
+            width = 0.35  # Width of the bars
+            
+            fig, ax = plt.subplots(figsize=(8, 5))
+            ax.bar(x - width/2, actual_values, width, label='Consumed', color='#2E7D32')
+            ax.bar(x + width/2, recommended_values, width, label='Recommended', color='#8BC34A')
+            
+            ax.set_xlabel("Nutrients")
+            ax.set_ylabel("Amount (mg/g) or % of daily intake")
+            ax.set_title("Actual vs Recommended Nutrient Intake")
+            ax.set_xticks(x)
+            ax.set_xticklabels(nutrients, rotation=45)
+            ax.legend()
+            
+            st.pyplot(fig)
         
-        ax.set_xlabel("Nutrients")
-        ax.set_ylabel("Amount (mg/g) or % of daily intake")
-        ax.set_title("Actual vs Recommended Nutrient Intake")
-        ax.set_xticks(x)
-        ax.set_xticklabels(nutrients, rotation=45)
-        ax.legend()
+        plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
         
-        st.pyplot(fig)
-    
-    plot_nutrient_chart(actual_nutrient_data, recommended_nutrient_data)
     # Nutrition Chatbot (Tab 3)
 with tab3:
     st.write("### 🤖 Ask Your Nutrition Questions!")
