@@ -165,77 +165,41 @@ with tab1:
             if pdf_path:
                 with open(pdf_path, "rb") as pdf_file:
                     st.download_button(label="Download PDF", data=pdf_file, file_name="Meal_Plan.pdf", mime="application/pdf")
+
+
 # Nutrient Intake Graphs (Tab 2)
 with tab2:
     st.write("### 📊 Nutrient Intake Comparison Chart")
-if food_input:
-    # AI Request with explicit JSON format instruction
-    nutrient_prompt = f"""
-    Analyze the nutritional content of the following foods: {food_input}. 
-    Provide values for Protein, Iron, Calcium, Vitamin C, and B12.
-    Respond ONLY in this exact JSON format without extra text:
-    {{
-        "Protein": 50,
-        "Iron": 18,
-        "Calcium": 1000,
-        "Vitamin C": 90,
-        "B12": 2.4
-    }}
-    """
-
-    nutrient_data = get_gemini_response(nutrient_prompt)
-
-    # Ensure response is valid JSON
-    try:
-        # Remove any unwanted AI-generated text or code blocks
-        nutrient_data = nutrient_data.strip().strip("```json").strip("```")
+    if food_input:
+        nutrient_prompt = f"Analyze the nutritional content of the following foods: {food_input}. Provide values for Protein, Iron, Calcium, Vitamin C, and B12 in JSON format."
+        nutrient_data = get_gemini_response(nutrient_prompt)
+        try:
+            nutrient_data = nutrient_data.strip().strip("```json").strip("```")
+            user_nutrient_data = json.loads(nutrient_data)
+        except Exception:
+            st.error("⚠️ Error parsing AI response. Displaying default values.")
+            user_nutrient_data = {"Protein": 50, "Iron": 18, "Calcium": 1000, "Vitamin C": 90, "B12": 2.4}
         
-        # Parse the cleaned AI response
-        user_nutrient_data = json.loads(nutrient_data)
-
-        # Validate if the AI returned correct keys
-        required_keys = {"Protein", "Iron", "Calcium", "Vitamin C", "B12"}
-        if not required_keys.issubset(user_nutrient_data.keys()):
-            raise ValueError("Missing expected keys in AI response.")
-
-    except Exception as e:
-        st.error(f"⚠️ Error parsing AI response: {str(e)}. Displaying default values.")
-        user_nutrient_data = {
-            "Protein": 50,
-            "Iron": 18,
-            "Calcium": 1000,
-            "Vitamin C": 90,
-            "B12": 2.4
-        }  # Default values
-
-    # Display extracted nutrient data in a table
-    st.write("### 🔍 Nutrient Breakdown from Your Input")
-    st.table(user_nutrient_data)
- 
+        recommended_nutrient_data = {"Protein": 60, "Iron": 20, "Calcium": 1200, "Vitamin C": 100, "B12": 2.6}
+        st.table(user_nutrient_data)
         
-        # Plot Graph
-    def plot_nutrient_chart(actual_data, recommended_data):
+        def plot_nutrient_chart(actual_data, recommended_data):
             nutrients = list(actual_data.keys())
             actual_values = list(actual_data.values())
             recommended_values = list(recommended_data.values())
-            
             x = np.arange(len(nutrients))
-            width = 0.35  # Width of the bars
-            
+            width = 0.35
             fig, ax = plt.subplots(figsize=(8, 5))
             ax.bar(x - width/2, actual_values, width, label='Consumed', color='#2E7D32')
             ax.bar(x + width/2, recommended_values, width, label='Recommended', color='#8BC34A')
-            
             ax.set_xlabel("Nutrients")
             ax.set_ylabel("Amount (mg/g) or % of daily intake")
             ax.set_title("Actual vs Recommended Nutrient Intake")
             ax.set_xticks(x)
             ax.set_xticklabels(nutrients, rotation=45)
             ax.legend()
-            
             st.pyplot(fig)
-        
-    plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
+        plot_nutrient_chart(user_nutrient_data, recommended_nutrient_data)
 
     # Nutrition Chatbot (Tab 3)
 with tab3:
