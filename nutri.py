@@ -35,7 +35,7 @@ else:
 
 def get_gemini_response(prompt):
     try:
-        model = genai.GenerativeModel("gemini-pro)  # Updated model version
+        model = genai.GenerativeModel("gemini-pro")  # Updated model version
         response = model.generate_content(prompt)
         return response.text if response and hasattr(response, 'text') else "⚠️ No response received. Try again."
     except Exception as e:
