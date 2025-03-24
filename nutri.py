@@ -25,7 +25,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Configure Gemini API
-API_KEY = "AIzaSyBo7GSQ-o4CnJl48HV1mvoFCj22SoIgGys"  # ✅ Replace with your actual API key
+API_KEY = "AIzaSyCh6u8pOShzL5Mw8SNDbq7TVjCXd0QPaCo"  # ✅ Replace with your actual API key
 genai.configure(api_key=API_KEY)
 
 if not API_KEY:
